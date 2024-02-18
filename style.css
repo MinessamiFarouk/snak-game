@@ -10,8 +10,11 @@ body{
     align-items: center;
     justify-content: center;
     font-family: "VT323", monospace;
+}
+body, .snake {
     background-color: #414141;
 }
+
 #game-board{
     display: grid;
     grid-template-columns: repeat(20, 20px);
