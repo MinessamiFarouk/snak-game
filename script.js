@@ -3,30 +3,44 @@ const board = document.getElementById("game-board")
 const instractionText = document.getElementById("instraction-text")
 const logo = document.getElementById("logo")
 const score = document.getElementById('score')
+const highScoreText = document.getElementById('highScore')
 
 //game varaibels
 const gridSize = 20
 let food = foodGenerator()
 let snake = [{x: 10, y:10}]
+let highScore = 0
 let direction = 'left'
 let gameSpeed = 200
 let gameInterval
 let gameStart = false
 
+//main drawing function
+let draw = () => {
+    board.innerHTML = ""
+    drawFood()
+    drawSnake()
+    updateScore()
+}
+
 //Draw Food
 function drawFood() {
-    const foodElement = creatGameElemet('div', 'food')
-    setPostion(foodElement, food)
-    board.appendChild(foodElement)
+    if(gameStart) {
+        const foodElement = creatGameElemet('div', 'food')
+        setPostion(foodElement, food)
+        board.appendChild(foodElement)
+    }
 }
 
 //draw snake
 function drawSnake() {
-    snake.forEach((segment) => {
-        const snakeElement = creatGameElemet('div', 'snake')
-        setPostion(snakeElement, segment)
-        board.appendChild(snakeElement)
-    })
+    if(gameStart){
+        snake.forEach((segment) => {
+            const snakeElement = creatGameElemet('div', 'snake')
+            setPostion(snakeElement, segment)
+            board.appendChild(snakeElement)
+        })
+    }
 }
 
 function creatGameElemet(elem, className) {
@@ -46,14 +60,6 @@ function foodGenerator() {
     return {x,y}
 }
 
-//main drawing function
-let draw = () => {
-    board.innerHTML = ""
-    drawFood()
-    drawSnake()
-    updateScore()
-}
-// draw()
 
 //move snake
 function moveSnake() {
@@ -140,6 +146,8 @@ function checkCollision(){
 }
 
 function resetGame(){
+    stopGame()
+    updateHighScore()
     food = foodGenerator()
     snake = [{x: 10, y:10}]
     direction = 'left'
@@ -150,4 +158,20 @@ function resetGame(){
 function updateScore(){
     const currentScore = snake.length - 1
     score.textContent = currentScore.toString().padStart(3, '0')
+}
+
+function stopGame(){
+    clearInterval(gameInterval)
+    gameStart = false
+    instractionText.style.display = 'block'
+    logo.style.display = 'block'
+}
+
+function updateHighScore(){
+    const currentScore = snake.length - 1
+    if(currentScore > highScore){
+        highScore = currentScore
+    }
+    highScoreText.textContent = highScore.toString().padStart(3, '0')
+    highScoreText.style.display = 'block'
 }
